@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    app:cardBackgroundColor="@color/soft_cream"
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp">
 
@@ -31,7 +32,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Product Name"
-            android:textColor="#1A1A1A"
+            android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="₹499"
-            android:textColor="#1F5D57"
+            android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"

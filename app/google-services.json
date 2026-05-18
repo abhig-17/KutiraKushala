@@ -1,26 +1,102 @@
 {
   "project_info": {
-    "project_number": "582948369957",
-    "project_id": "kutirakushala2-7ad8d",
-    "storage_bucket": "kutirakushala2-7ad8d.firebasestorage.app"
+    "project_number": "354114518025",
+    "project_id": "namma-skill-882c3",
+    "storage_bucket": "namma-skill-882c3.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:582948369957:android:9d67c4cc82c8a7b4e131cc",
+        "mobilesdk_app_id": "1:354114518025:android:aef9ff3803690186870cd8",
         "android_client_info": {
-          "package_name": "com.example.kutira_kushala"
+          "package_name": "com.example.halli_santhe"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "354114518025-s0g90ud73f09q79d0hcgbfh9bs80sl6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBxtuUKFo8bbhEn6gtIrf2OYfHwIn96Z3o"
+          "current_key": "AIzaSyDLVgeq-hQkewDOfG7cGXYKJ7N4duTJIiI"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "354114518025-s0g90ud73f09q79d0hcgbfh9bs80sl6g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354114518025:android:02a7a813dfa7a274870cd8",
+        "android_client_info": {
+          "package_name": "com.example.kutira_kushala"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "354114518025-s0g90ud73f09q79d0hcgbfh9bs80sl6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLVgeq-hQkewDOfG7cGXYKJ7N4duTJIiI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "354114518025-s0g90ud73f09q79d0hcgbfh9bs80sl6g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354114518025:android:feed8ea956e28859870cd8",
+        "android_client_info": {
+          "package_name": "com.example.namma_skills"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "354114518025-5a1tsrhqjccdp9204f65ube95cdll6rp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.namma_skills",
+            "certificate_hash": "77e8ce4a6dfa393a7186553bf9a695126dccff2b"
+          }
+        },
+        {
+          "client_id": "354114518025-s0g90ud73f09q79d0hcgbfh9bs80sl6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLVgeq-hQkewDOfG7cGXYKJ7N4duTJIiI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "354114518025-s0g90ud73f09q79d0hcgbfh9bs80sl6g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

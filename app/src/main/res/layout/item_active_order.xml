@@ -4,6 +4,7 @@
     android:layout_width="220dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="16dp"
+    app:cardBackgroundColor="@color/soft_cream"
     app:cardCornerRadius="16dp"
     app:cardElevation="2dp">
 
@@ -20,7 +21,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Buyer Name"
-            android:textColor="#1A1A1A"
+            android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -32,7 +33,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="500 Bamboo Baskets"
-            android:textColor="#6B7280"
+            android:textColor="@color/text_secondary_dark"
             android:textSize="12sp" />
 
         <TextView
@@ -44,7 +45,7 @@
             android:paddingHorizontal="8dp"
             android:paddingVertical="2dp"
             android:text="PROCESSING"
-            android:textColor="#1F5D57"
+            android:textColor="@color/aqua_mist"
             android:textSize="10sp"
             android:textStyle="bold" />
 
