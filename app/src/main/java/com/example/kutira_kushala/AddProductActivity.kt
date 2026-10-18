@@ -96,9 +96,105 @@ class AddProductActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_submit).setOnClickListener { attemptSubmit() }
         findViewById<Button>(R.id.btn_cancel).setOnClickListener { handleBackNavigation() }
 
+        setupGenAIAssist()
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { handleBackNavigation() }
         })
+    }
+
+    private fun setupGenAIAssist() {
+        val btnGenAI = findViewById<Button>(R.id.btn_genai_assist)
+        val pbLoading = findViewById<View>(R.id.pb_genai_loading)
+        val etDesc = findViewById<EditText>(R.id.et_description)
+        val etName = findViewById<EditText>(R.id.et_product_name)
+
+        btnGenAI.setOnClickListener {
+            val name = etName.text.toString().trim()
+            val category = etCategory.text.toString().trim()
+            val currentDesc = etDesc.text.toString().trim()
+
+            val promptText = when {
+                currentDesc.isNotEmpty() -> currentDesc
+                name.isNotEmpty() -> "$name ($category)"
+                else -> {
+                    Toast.makeText(this, "Enter a product name or rough phrase first", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+            }
+
+            btnGenAI.isEnabled = false
+            pbLoading.visibility = View.VISIBLE
+
+            callGeminiApi(promptText) { result ->
+                runOnUiThread {
+                    btnGenAI.isEnabled = true
+                    pbLoading.visibility = View.GONE
+                    if (result != null) {
+                        etDesc.setText(result)
+                        Toast.makeText(this, "Description generated with Gemini AI!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Failed to generate description. Please check network/API key.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun callGeminiApi(inputPhrase: String, callback: (String?) -> Unit) {
+        val apiKey = "YOUR_GEMINI_API_KEY"
+        val urlString = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$apiKey"
+
+        java.util.concurrent.Executors.newSingleThreadExecutor().execute {
+            try {
+                val prompt = "You are a helpful B2B assistant for rural artisans. Transform this rough phrase into a compelling product description for wholesale buyers: $inputPhrase"
+                
+                val rootJson = org.json.JSONObject().apply {
+                    val contentsArray = org.json.JSONArray().apply {
+                        val contentObj = org.json.JSONObject().apply {
+                            val partsArray = org.json.JSONArray().apply {
+                                put(org.json.JSONObject().put("text", prompt))
+                            }
+                            put("parts", partsArray)
+                        }
+                        put(contentObj)
+                    }
+                    put("contents", contentsArray)
+                }
+
+                val url = java.net.URL(urlString)
+                val conn = url.openConnection() as java.net.HttpURLConnection
+                conn.requestMethod = "POST"
+                conn.setRequestProperty("Content-Type", "application/json; charset=utf-8")
+                conn.doOutput = true
+                conn.connectTimeout = 10000
+                conn.readTimeout = 10000
+
+                conn.outputStream.use { os ->
+                    val bytes = rootJson.toString().toByteArray(Charsets.UTF_8)
+                    os.write(bytes, 0, bytes.size)
+                }
+
+                if (conn.responseCode == 200) {
+                    val responseStr = conn.inputStream.bufferedReader().use { it.readText() }
+                    val jsonResp = org.json.JSONObject(responseStr)
+                    val text = jsonResp.getJSONArray("candidates")
+                        .getJSONObject(0)
+                        .getJSONObject("content")
+                        .getJSONArray("parts")
+                        .getJSONObject(0)
+                        .getString("text")
+                    callback(text.trim())
+                } else {
+                    val errStr = conn.errorStream?.bufferedReader()?.use { it.readText() }
+                    Log.e("GeminiAPI", "Error ${conn.responseCode}: $errStr")
+                    callback(null)
+                }
+            } catch (e: Exception) {
+                Log.e("GeminiAPI", "Exception during Gemini request", e)
+                callback(null)
+            }
+        }
     }
 
     private fun addImage(uri: Uri) {

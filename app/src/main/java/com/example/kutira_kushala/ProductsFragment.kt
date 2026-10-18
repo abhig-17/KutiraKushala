@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.Query
 
 class ProductsFragment : Fragment() {
@@ -40,6 +42,7 @@ class ProductsFragment : Fragment() {
     
     private val recentSearches = mutableListOf<String>()
     private var allProductsFromDb = listOf<ProductItem>()
+    private var productsListenerRegistration: ListenerRegistration? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_products, container, false)
@@ -77,9 +80,10 @@ class ProductsFragment : Fragment() {
     }
 
     private fun loadProductsFromFirestore() {
-        FirebaseFirestore.getInstance().collection("products")
+        productsListenerRegistration?.remove()
+        productsListenerRegistration = FirebaseFirestore.getInstance().collection("products")
             .orderBy("createdAt", Query.Direction.DESCENDING)
-            .addSnapshotListener { snapshot, e ->
+            .addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, e ->
                 if (e != null || snapshot == null) return@addSnapshotListener
                 allProductsFromDb = snapshot.toObjects(ProductItem::class.java)
                 applyFilters()
@@ -200,12 +204,26 @@ class ProductsFragment : Fragment() {
         selected.setTextColor(Color.WHITE)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        productsListenerRegistration?.remove()
+        productsListenerRegistration = null
+    }
+
     private fun applyFilters() {
         val filtered = allProductsFromDb.filter { product ->
-            val matchesCategory = currentCategory == "All" || product.category == currentCategory
+            val productCatNorm = product.category.trim().lowercase()
+            val currentCatNorm = currentCategory.trim().lowercase()
+
+            val matchesCategory = currentCategory == "All" || 
+                                  productCatNorm == currentCatNorm ||
+                                  productCatNorm.contains(currentCatNorm) ||
+                                  currentCatNorm.contains(productCatNorm)
+
             val matchesSearch = currentQuery.isEmpty() || 
                                product.name.lowercase().contains(currentQuery) || 
-                               product.category.lowercase().contains(currentQuery)
+                               product.category.lowercase().contains(currentQuery) ||
+                               product.description.lowercase().contains(currentQuery)
             
             matchesCategory && matchesSearch
         }

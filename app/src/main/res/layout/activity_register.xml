@@ -3,166 +3,224 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_light">
+    android:background="@color/splash_bg">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="24dp">
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="32dp">
 
-            <FrameLayout
-                android:id="@+id/icon_container"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/circle_green"
-                android:elevation="6dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+            <!-- Top Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/app_icon_desc"
-                    android:src="@drawable/ic_shield"
-                    app:tint="@android:color/white" />
-            </FrameLayout>
+                    android:id="@+id/btn_back"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/desc_back"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_back_arrow"
+                    app:tint="#1A2E26" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Seller Registration"
+                    android:textColor="#1A2E26"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/title_register"
-                android:textColor="@color/black"
-                android:textSize="34sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/icon_container" />
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:lineSpacingExtra="3dp"
+                android:text="Join as a local maker and reach wholesale buyers directly."
+                android:textColor="#64748B"
+                android:textSize="14sp" />
 
+            <!-- Form Fields -->
             <TextView
-                android:id="@+id/tv_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/subtitle_register"
-                android:textColor="@color/text_secondary_dark"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+                android:text="Full Name"
+                android:textColor="#1A2E26"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/et_full_name"
-                android:layout_width="0dp"
-                android:layout_height="58dp"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/input_background"
-                android:hint="@string/hint_full_name"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_bg_white"
+                android:hint="e.g. Ramesh Kumar"
                 android:importantForAutofill="no"
                 android:inputType="textPersonName"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/text_secondary_dark"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_subtitle" />
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A2E26"
+                android:textColorHint="#94A3B8"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Business / Workshop Name"
+                android:textColor="#1A2E26"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/et_business_name"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_bg_white"
+                android:hint="e.g. Ramesh Bamboo Crafts"
+                android:importantForAutofill="no"
+                android:inputType="textCapWords"
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A2E26"
+                android:textColorHint="#94A3B8"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mobile Number"
+                android:textColor="#1A2E26"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/et_mobile"
-                android:layout_width="0dp"
-                android:layout_height="58dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/input_background"
-                android:hint="@string/hint_mobile"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_bg_white"
+                android:hint="+91 98765 43210"
                 android:importantForAutofill="no"
                 android:inputType="phone"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/text_secondary_dark"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_full_name" />
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A2E26"
+                android:textColorHint="#94A3B8"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Product Category"
+                android:textColor="#1A2E26"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/et_category"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_bg_white"
+                android:drawableEnd="@drawable/ic_chevron_down"
+                android:focusable="false"
+                android:hint="Select primary category"
+                android:importantForAutofill="no"
+                android:inputType="none"
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A2E26"
+                android:textColorHint="#94A3B8"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Business Location"
+                android:textColor="#1A2E26"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/et_location"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/card_bg_white"
+                android:hint="e.g. Mysuru, Karnataka"
+                android:importantForAutofill="no"
+                android:inputType="textCapWords"
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A2E26"
+                android:textColorHint="#94A3B8"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password"
+                android:textColor="#1A2E26"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/et_passcode"
-                android:layout_width="0dp"
-                android:layout_height="58dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/input_background"
-                android:hint="@string/hint_passcode"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/card_bg_white"
+                android:hint="........"
                 android:importantForAutofill="no"
-                android:inputType="numberPassword"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/text_secondary_dark"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_mobile" />
+                android:inputType="textPassword"
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A2E26"
+                android:textColorHint="#94A3B8"
+                android:textSize="14sp" />
 
-            <EditText
-                android:id="@+id/et_confirm_passcode"
-                android:layout_width="0dp"
-                android:layout_height="58dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/input_background"
-                android:hint="@string/hint_confirm_passcode"
-                android:importantForAutofill="no"
-                android:inputType="numberPassword"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/text_secondary_dark"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_passcode" />
-
+            <!-- Submit Button -->
             <Button
                 android:id="@+id/btn_register"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="32dp"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
                 android:background="@drawable/login_button_bg"
-                android:elevation="6dp"
+                android:backgroundTint="@color/forest_green"
+                android:elevation="2dp"
                 android:stateListAnimator="@null"
-                android:text="@string/btn_register"
+                android:text="Create Account"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_confirm_passcode" />
+                app:backgroundTint="@color/forest_green" />
 
             <TextView
-                android:id="@+id/tv_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
-                android:text="@string/txt_login"
-                android:textColor="@color/text_secondary_dark"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_register" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:text="By creating an account, you agree to our Terms of Service and Privacy Policy."
+                android:textColor="#64748B"
+                android:textSize="12sp" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

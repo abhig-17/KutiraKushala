@@ -2,20 +2,19 @@ package com.example.kutira_kushala
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -23,18 +22,17 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
 
     private lateinit var etFullName: EditText
+    private lateinit var etBusinessName: EditText
     private lateinit var etMobile: EditText
+    private lateinit var etCategory: EditText
+    private lateinit var etLocation: EditText
     private lateinit var etPasscode: EditText
-    private lateinit var etConfirmPasscode: EditText
     private lateinit var btnRegister: Button
 
+    private val categories = arrayOf("Crafts & Handicrafts", "Food & Processed Items", "Textiles & Handloom", "Handmade Decor", "Agarbatti & Spices")
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        val prefs = getSharedPreferences("theme_prefs", MODE_PRIVATE)
-        if (prefs.getBoolean("dark_mode", false)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -43,96 +41,76 @@ class RegisterActivity : AppCompatActivity() {
         firestore = FirebaseFirestore.getInstance()
 
         etFullName = findViewById(R.id.et_full_name)
+        etBusinessName = findViewById(R.id.et_business_name)
         etMobile = findViewById(R.id.et_mobile)
+        etCategory = findViewById(R.id.et_category)
+        etLocation = findViewById(R.id.et_location)
         etPasscode = findViewById(R.id.et_passcode)
-        etConfirmPasscode = findViewById(R.id.et_confirm_passcode)
         btnRegister = findViewById(R.id.btn_register)
-        val tvLogin = findViewById<TextView>(R.id.tv_login)
 
-        val watcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                validateFields()
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        }
-
-        etFullName.addTextChangedListener(watcher)
-        etMobile.addTextChangedListener(watcher)
-        etPasscode.addTextChangedListener(watcher)
-        etConfirmPasscode.addTextChangedListener(watcher)
+        findViewById<View>(R.id.btn_back).setOnClickListener { handleBackNavigation() }
+        etCategory.setOnClickListener { showCategoryDialog() }
 
         btnRegister.setOnClickListener {
-            if (performFinalValidation()) {
+            if (performValidation()) {
                 registerUser()
             }
         }
-
-        tvLogin.setOnClickListener { handleBackNavigation() }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { handleBackNavigation() }
         })
     }
 
-    private fun validateFields() {
-        val name = etFullName.text.toString().trim()
-        val mobile = etMobile.text.toString().trim()
-        val passcode = etPasscode.text.toString()
-        val confirmPasscode = etConfirmPasscode.text.toString()
-
-        btnRegister.isEnabled = name.isNotEmpty() && 
-                                mobile.length == 10 && 
-                                passcode.length >= 6 && 
-                                confirmPasscode == passcode
+    private fun showCategoryDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Select Product Category")
+            .setItems(categories) { _, which -> etCategory.setText(categories[which]) }
+            .show()
     }
 
-    private fun performFinalValidation(): Boolean {
+    private fun performValidation(): Boolean {
+        val name = etFullName.text.toString().trim()
+        val business = etBusinessName.text.toString().trim()
         val mobile = etMobile.text.toString().trim()
-        val passcode = etPasscode.text.toString()
-        val confirmPasscode = etConfirmPasscode.text.toString()
+        val category = etCategory.text.toString().trim()
+        val location = etLocation.text.toString().trim()
+        val password = etPasscode.text.toString()
 
-        var isValid = true
+        if (name.isEmpty()) { etFullName.error = "Enter full name"; return false }
+        if (business.isEmpty()) { etBusinessName.error = "Enter business name"; return false }
+        if (mobile.length != 10 || !mobile.all { it.isDigit() }) { etMobile.error = "Enter valid 10-digit mobile number"; return false }
+        if (category.isEmpty()) { Toast.makeText(this, "Select a product category", Toast.LENGTH_SHORT).show(); return false }
+        if (location.isEmpty()) { etLocation.error = "Enter business location"; return false }
+        if (password.length < 6) { etPasscode.error = "Password must be at least 6 characters"; return false }
 
-        if (mobile.length != 10 || !mobile.all { it.isDigit() }) {
-            etMobile.error = "Invalid mobile number"
-            isValid = false
-        }
-
-        if (passcode.length < 6) {
-            etPasscode.error = "Passcode must be at least 6 characters"
-            isValid = false
-        }
-
-        if (passcode != confirmPasscode) {
-            etConfirmPasscode.error = "Passcodes do not match"
-            isValid = false
-        }
-
-        return isValid
+        return true
     }
 
     private fun registerUser() {
         val name = etFullName.text.toString().trim()
+        val business = etBusinessName.text.toString().trim()
         val mobile = etMobile.text.toString().trim()
-        val passcode = etPasscode.text.toString()
+        val category = etCategory.text.toString().trim()
+        val location = etLocation.text.toString().trim()
+        val password = etPasscode.text.toString()
         
         val tempEmail = "$mobile@kutira.com"
 
         btnRegister.isEnabled = false
         
-        auth.createUserWithEmailAndPassword(tempEmail, passcode)
+        auth.createUserWithEmailAndPassword(tempEmail, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val uid = auth.currentUser?.uid
                     if (uid != null) {
-                        saveUserAndSeller(uid, name, mobile)
+                        saveUserAndSeller(uid, name, business, mobile, category, location)
                     }
                 } else {
                     btnRegister.isEnabled = true
                     val message = when (task.exception) {
                         is FirebaseAuthUserCollisionException -> "Mobile number already registered"
-                        is FirebaseAuthWeakPasswordException -> "Passcode is too weak"
+                        is FirebaseAuthWeakPasswordException -> "Password is too weak"
                         else -> task.exception?.localizedMessage ?: "Registration failed"
                     }
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -140,7 +118,7 @@ class RegisterActivity : AppCompatActivity() {
             }
     }
 
-    private fun saveUserAndSeller(uid: String, name: String, mobile: String) {
+    private fun saveUserAndSeller(uid: String, name: String, business: String, mobile: String, category: String, location: String) {
         val batch = firestore.batch()
         
         val userRef = firestore.collection("users").document(uid)
@@ -156,9 +134,10 @@ class RegisterActivity : AppCompatActivity() {
         val sellerMap = hashMapOf(
             "sellerId" to uid,
             "sellerName" to name,
+            "businessName" to business,
             "mobileNumber" to mobile,
-            "businessName" to "$name's Micro-Factory",
-            "location" to "Pending",
+            "skills" to listOf(category),
+            "location" to location,
             "experienceYears" to 0,
             "rating" to 5.0f,
             "productsCount" to 0,
@@ -168,7 +147,7 @@ class RegisterActivity : AppCompatActivity() {
 
         batch.commit()
             .addOnSuccessListener {
-                Toast.makeText(this, "Welcome to Kutira Kushala!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Welcome to Kutira-Kushala!", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, MainActivity::class.java))
                 finishAffinity()
             }

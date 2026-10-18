@@ -11,14 +11,8 @@ import com.google.firebase.auth.FirebaseAuth
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Apply theme before super.onCreate
-        val prefs = getSharedPreferences("theme_prefs", MODE_PRIVATE)
-        val isDarkMode = prefs.getBoolean("dark_mode", false)
-        if (isDarkMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
+        // Force Light Mode for Splash Screen to guarantee warm off-white background (#F9F8F4)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -35,7 +29,7 @@ class SplashActivity : AppCompatActivity() {
             val nextActivity = if (auth.currentUser != null) {
                 MainActivity::class.java
             } else {
-                LoginActivity::class.java
+                RoleSelectionActivity::class.java
             }
             
             val intent = Intent(this, nextActivity)

@@ -26,4 +26,9 @@
     <color name="nav_item_color_light">@color/aqua_mist</color>
     <color name="nav_item_color_dark">@color/aqua_mist</color>
     <color name="shimmer_placeholder">#E0E0E0</color>
+
+    <!-- Splash Screen Palette -->
+    <color name="splash_bg">#F9F8F4</color>
+    <color name="forest_green">#2A5A4A</color>
+    <color name="terracotta">#C47556</color>
 </resources>

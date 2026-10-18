@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">Kutira-Kushala</string>
-    <string name="app_display_name">Kutira.Kushala</string>
-    <string name="tagline">Connecting village artisans to global markets</string>
+    <string name="app_display_name">Kutira-Kushala</string>
+    <string name="tagline">Local Makers. Limitless Possibilities.</string>
     <string name="app_icon_desc">App Icon</string>
     <string name="welcome_back">Welcome Back</string>
     <string name="hint_mobile">Mobile Number</string>
     <string name="hint_passcode">Passcode</string>
     <string name="btn_authenticate">AUTHENTICATE</string>
     <string name="txt_register">New here? Register your business</string>
-    <string name="title_register">Join the Factory</string>
-    <string name="subtitle_register">Register your business and start selling</string>
+    <string name="title_register">Seller Registration</string>
+    <string name="subtitle_register">Join as a local maker and reach wholesale buyers directly.</string>
     <string name="hint_full_name">Full Name</string>
     <string name="hint_confirm_passcode">Confirm Passcode</string>
     <string name="btn_register">REGISTER ARTISAN</string>

@@ -17,6 +17,8 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.Query
 
 class HomeFragment : Fragment() {
@@ -31,6 +33,9 @@ class HomeFragment : Fragment() {
     private lateinit var shimmerContainer: ShimmerFrameLayout
     private lateinit var mainContent: View
     private val db = FirebaseFirestore.getInstance()
+
+    private var capacityListenerRegistration: ListenerRegistration? = null
+    private var productsListenerRegistration: ListenerRegistration? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
@@ -95,6 +100,23 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        detachListeners()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        detachListeners()
+    }
+
+    private fun detachListeners() {
+        capacityListenerRegistration?.remove()
+        capacityListenerRegistration = null
+        productsListenerRegistration?.remove()
+        productsListenerRegistration = null
+    }
+
     private fun updateProfileData() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         db.collection("sellers").document(uid).get().addOnSuccessListener { doc ->
@@ -107,27 +129,27 @@ class HomeFragment : Fragment() {
 
     private fun updateOrdersAndCapacity() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        db.collection("notifications")
+        capacityListenerRegistration?.remove()
+        capacityListenerRegistration = db.collection("notifications")
             .whereEqualTo("receiverId", uid)
             .orderBy("timestamp", Query.Direction.DESCENDING)
-            .addSnapshotListener { snapshot, _ ->
-                if (snapshot != null) {
-                    val notifications = snapshot.toObjects(Notification::class.java)
-                    val activeOrders = notifications.filter { 
-                        it.status != OrderStatus.REQUESTED && 
-                        it.status != OrderStatus.DELIVERED && 
-                        it.status != OrderStatus.COMPLETED 
-                    }
-                    
-                    orderAdapter = ActiveOrderAdapter(activeOrders) { order ->
-                        val intent = Intent(context, OrderTrackingActivity::class.java)
-                        intent.putExtra("NOTIFICATION_ID", order.id)
-                        startActivity(intent)
-                    }
-                    view?.findViewById<RecyclerView>(R.id.rv_active_orders)?.adapter = orderAdapter
-
-                    calculateAndAnimateCapacity(notifications)
+            .addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, error ->
+                if (error != null || snapshot == null) return@addSnapshotListener
+                val notifications = snapshot.toObjects(Notification::class.java)
+                val activeOrders = notifications.filter { 
+                    it.status != OrderStatus.REQUESTED && 
+                    it.status != OrderStatus.DELIVERED && 
+                    it.status != OrderStatus.COMPLETED 
                 }
+                
+                orderAdapter = ActiveOrderAdapter(activeOrders) { order ->
+                    val intent = Intent(context, OrderTrackingActivity::class.java)
+                    intent.putExtra("NOTIFICATION_ID", order.id)
+                    startActivity(intent)
+                }
+                view?.findViewById<RecyclerView>(R.id.rv_active_orders)?.adapter = orderAdapter
+
+                calculateAndAnimateCapacity(notifications)
             }
     }
 
@@ -164,10 +186,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun updateProducts() {
-        db.collection("products")
+        productsListenerRegistration?.remove()
+        productsListenerRegistration = db.collection("products")
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .limit(10)
-            .addSnapshotListener { snapshot, e ->
+            .addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, e ->
                 if (e != null || snapshot == null) return@addSnapshotListener
                 val products = snapshot.toObjects(ProductItem::class.java)
                 productAdapter.submitList(products)

@@ -67,12 +67,15 @@ class SellerProfileActivity : AppCompatActivity() {
         findViewById<View>(R.id.btn_back_seller).setOnClickListener { finish() }
 
         findViewById<View>(R.id.btn_contact_seller).setOnClickListener {
-            val sellerId = intent.getStringExtra("SELLER_ID")
-            FirebaseFirestore.getInstance().collection("sellers").document(sellerId!!).get()
+            val sId = intent.getStringExtra("SELLER_ID") ?: sellerId
+            if (sId.isEmpty()) return@setOnClickListener
+            FirebaseFirestore.getInstance().collection("sellers").document(sId).get()
                 .addOnSuccessListener { doc ->
-                    val mobile = doc.getString("mobileNumber") ?: "9876543210"
-                    val intent = Intent(Intent.ACTION_DIAL, android.net.Uri.parse("tel:$mobile"))
-                    startActivity(intent)
+                    val mobile = doc.getString("mobileNumber") ?: ""
+                    initiateCall(mobile)
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Failed to load seller contact", Toast.LENGTH_SHORT).show()
                 }
         }
 
@@ -125,6 +128,24 @@ class SellerProfileActivity : AppCompatActivity() {
             chip.chipBackgroundColor = getColorStateList(R.color.primary_green)
             chip.setTextColor(android.graphics.Color.WHITE)
             cgSkills.addView(chip)
+        }
+    }
+
+    private fun initiateCall(phoneNumber: String) {
+        if (phoneNumber.isBlank()) {
+            Toast.makeText(this, "Phone number unavailable", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val sanitized = phoneNumber.replace("[^0-9+]".toRegex(), "")
+        if (sanitized.isEmpty()) {
+            Toast.makeText(this, "Invalid phone number format", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val dialIntent = Intent(Intent.ACTION_DIAL, android.net.Uri.parse("tel:$sanitized"))
+        try {
+            startActivity(dialIntent)
+        } catch (e: Exception) {
+            Toast.makeText(this, "No dialer application found", Toast.LENGTH_SHORT).show()
         }
     }
 

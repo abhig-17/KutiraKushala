@@ -32,6 +32,8 @@ class ProductDetailActivity : AppCompatActivity() {
     private lateinit var mainContent: View
     private var currentProduct: ProductItem? = null
 
+    private var currentSellerMobile: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val prefs = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE)
         if (prefs.getBoolean("dark_mode", false)) {
@@ -66,17 +68,50 @@ class ProductDetailActivity : AppCompatActivity() {
         findViewById<View>(R.id.btn_back_detail).setOnClickListener { finish() }
 
         findViewById<Button>(R.id.btn_call).setOnClickListener {
-            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:9876543210"))
-            startActivity(intent)
+            initiateCall(currentSellerMobile ?: "9876543210")
         }
 
         findViewById<Button>(R.id.btn_whatsapp).setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=919876543210"))
-            startActivity(intent)
+            initiateWhatsApp(currentSellerMobile ?: "9876543210")
         }
 
         findViewById<Button>(R.id.btn_bulk_request).setOnClickListener {
             showBulkOrderDialog()
+        }
+    }
+
+    private fun initiateCall(phoneNumber: String) {
+        if (phoneNumber.isBlank()) {
+            Toast.makeText(this, "Phone number unavailable", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val sanitized = phoneNumber.replace("[^0-9+]".toRegex(), "")
+        if (sanitized.isEmpty()) {
+            Toast.makeText(this, "Invalid phone number format", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$sanitized"))
+        try {
+            startActivity(dialIntent)
+        } catch (e: Exception) {
+            Toast.makeText(this, "No dialer application found", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun initiateWhatsApp(phoneNumber: String) {
+        if (phoneNumber.isBlank()) {
+            Toast.makeText(this, "Phone number unavailable", Toast.LENGTH_SHORT).show()
+            return
+        }
+        var sanitized = phoneNumber.replace("[^0-9]".toRegex(), "")
+        if (sanitized.length == 10) {
+            sanitized = "91$sanitized"
+        }
+        val waIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=$sanitized"))
+        try {
+            startActivity(waIntent)
+        } catch (e: Exception) {
+            Toast.makeText(this, "WhatsApp is not installed on this device", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -107,6 +142,7 @@ class ProductDetailActivity : AppCompatActivity() {
             .addOnSuccessListener { doc ->
                 val seller = doc.toObject(Seller::class.java)
                 seller?.let { s ->
+                    currentSellerMobile = s.mobileNumber
                     findViewById<TextView>(R.id.tv_detail_seller_name).text = s.businessName
                     findViewById<TextView>(R.id.tv_detail_seller_loc).text = s.location
                     findViewById<TextView>(R.id.tv_detail_seller_rating).text = "${s.rating} ★"
