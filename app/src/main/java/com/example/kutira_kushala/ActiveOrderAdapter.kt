@@ -10,7 +10,6 @@ class ActiveOrderAdapter(
     private val orders: List<Notification>,
     private val onOrderClick: (Notification) -> Unit
 ) : RecyclerView.Adapter<ActiveOrderAdapter.ViewHolder>() {
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val buyer: TextView = view.findViewById(R.id.tv_card_buyer)
         val product: TextView = view.findViewById(R.id.tv_card_product)
