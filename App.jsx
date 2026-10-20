@@ -46,7 +46,6 @@ export default function App() {
       />
     );
   }
-
   if (currentScreen === 'signIn') {
     return (
       <SignIn
@@ -59,7 +58,6 @@ export default function App() {
       />
     );
   }
-
   return (
     <RoleSelection
       onSelectSeller={() => setCurrentScreen('sellerRegistration')}
