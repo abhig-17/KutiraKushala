@@ -14,7 +14,7 @@ export default function SplashScreen() {
         Kutira-Kushala
       </h1>
 
-      {/* Tagline */}
+  
       <p className="text-[#C47556] text-base mt-2 font-medium">
         Local Makers. Limitless Possibilities.
       </p>
