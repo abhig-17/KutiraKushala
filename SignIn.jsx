@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChevronLeft } from 'lucide-react';
 
 export default function SignIn({ onBack, onSubmitSuccess, onForgotPassword }) {
-  const [activeRole, setActiveRole] = useState('seller'); // 'seller' or 'buyer'
+  const [activeRole, setActiveRole] = useState('seller'); 
   const [mobileNumber, setMobileNumber] = useState('');
   const [password, setPassword] = useState('');
 
