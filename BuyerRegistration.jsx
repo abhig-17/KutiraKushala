@@ -27,7 +27,7 @@ export default function BuyerRegistration({ onBack, onSubmitSuccess }) {
 
   return (
     <div className="bg-[#F9F8F4] pt-16 px-6 min-h-screen flex flex-col pb-12">
-      {/* Header Row */}
+      
       <div className="flex items-center gap-3">
         <button
           onClick={onBack}
