@@ -17,7 +17,6 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class BuyerRegistrationActivity : AppCompatActivity() {
-
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
