@@ -65,7 +65,7 @@ class ProductAdapter(private val onItemClick: (ProductItem) -> Unit) : ListAdapt
             }
         }
 
-        // Apply fade-in animation
+    
         holder.itemView.startAnimation(AnimationUtils.loadAnimation(holder.itemView.context, R.anim.item_fade_in))
     }
 
