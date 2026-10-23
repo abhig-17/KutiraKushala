@@ -17,7 +17,6 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-
 class SellerProfileActivity : AppCompatActivity() {
 
     private lateinit var ivProfile: ImageView
