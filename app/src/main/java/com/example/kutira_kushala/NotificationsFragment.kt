@@ -39,7 +39,7 @@ class NotificationsFragment : Fragment() {
     private fun listenForNotifications() {
         val currentUserId = auth.currentUser?.uid ?: return
         
-        // Only show active (non-delivered) notifications
+       
         db.collection("notifications")
             .whereEqualTo("receiverId", currentUserId)
             .whereIn("status", listOf("REQUESTED", "ACCEPTED", "PROCESSING", "READY"))
