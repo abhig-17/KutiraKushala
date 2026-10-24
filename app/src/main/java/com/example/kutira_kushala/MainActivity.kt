@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
